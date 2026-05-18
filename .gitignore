@@ -1,5 +1,62 @@
 
 
-# Note
+# Note (keep local only)
 note.md
+
+# ── Python ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.so
+
+# ── Virtual environments ─────────────────────────────────────────────
+.venv/
+venv/
+env/
+.env
+
+# ── Data (large / sensitive) ─────────────────────────────────────────
+data/transcripts/**/*.pdf
+data/tracker.db
+data/*.db
+data/*.duckdb
+
+# Keep the directory structure in git
+!data/transcripts/.gitkeep
+
+# ── Model cache (HuggingFace / Sentence-Transformers) ────────────────
+.cache/
+models/
+*.bin
+*.safetensors
+*.pt
+*.ckpt
+
+# ── FAISS index files ────────────────────────────────────────────────
+*.faiss
+*.index
+
+# ── Logs ─────────────────────────────────────────────────────────────
+logs/
+*.log
+
+# ── IDE / OS ─────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Jupyter ──────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Streamlit ────────────────────────────────────────────────────────
+.streamlit/
 

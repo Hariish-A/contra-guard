@@ -1,0 +1,32 @@
+# ── Data Ingestion ──────────────────────────────────────────────────
+requests>=2.31.0
+beautifulsoup4>=4.12.2
+lxml>=5.1.0
+PyMuPDF>=1.24.0          # fitz — PDF extraction
+
+# ── NLP / ML ────────────────────────────────────────────────────────
+transformers>=4.40.0
+torch>=2.2.0
+sentence-transformers>=2.7.0
+faiss-cpu>=1.8.0          # use faiss-gpu if CUDA available
+spacy>=3.7.4
+# Download model separately:  python -m spacy download en_core_web_sm
+
+# ── Finance-specific models (downloaded at runtime) ─────────────────
+# ProsusAI/finbert
+# nickmuchi/finbert-tone-finetuned-finance-topic-classification
+# cross-encoder/nli-deberta-v3-base
+
+# ── Storage ─────────────────────────────────────────────────────────
+duckdb>=0.10.0
+
+# ── Dashboard ───────────────────────────────────────────────────────
+streamlit>=1.35.0
+plotly>=5.22.0
+
+# ── Utilities ───────────────────────────────────────────────────────
+pandas>=2.2.0
+numpy>=1.26.0
+python-dotenv>=1.0.0
+tqdm>=4.66.0
+loguru>=0.7.2

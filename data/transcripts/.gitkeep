@@ -1,0 +1,3 @@
+# Raw PDF transcripts are stored here.
+# Structure: data/transcripts/<bse_code>/<quarter>/<filename>.pdf
+# This directory is git-ignored (see .gitignore).
