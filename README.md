@@ -122,7 +122,7 @@ Target quarters: **Q1FY23 → Q4FY24** (8 quarters per company)
 | Week | Deliverable | Status |
 |---|---|---|
 | 1 | Scraper working, 5 companies, 8 quarters of transcripts | ✅ |
-| 2 | Speaker diarization + statement extractor | 🔜 |
+| 2 | Speaker diarization + statement extractor + classifier | ✅ |
 | 3 | FAISS index + NLI contradiction scorer | 🔜 |
 | 4 | Soft contradiction detector + hedge escalation | 🔜 |
 | 5 | Credibility scorer tracking 3 executives across 2 years | 🔜 |
@@ -141,3 +141,26 @@ SQLite for reads/writes · DuckDB for cross-quarter analytics queries.
 ## Recruiter Pitch
 
 *"I built a system that tracks forward guidance contradictions in earnings calls — detecting both hard logical contradictions and soft sentiment reversals using NLI + hedge escalation scoring, then scoring executive credibility by comparing what was promised vs what was delivered across 8 quarters."*
+
+---
+
+## Running Instructions
+
+Ensure your virtual environment is activated before running the scripts:
+```powershell
+.\venv\Scripts\activate
+```
+
+### Week 1: Data Ingestion
+This step downloads all earnings call PDFs from BSE India and financial metrics from Screener.in, then saves the raw text into the SQLite database.
+```powershell
+python run_ingestion.py
+```
+*(Tip: Use `python run_ingestion.py --help` for options like running a single company)*
+
+### Week 2: Extraction Layer
+This step processes the raw transcript text. It diarizes the text by speaker, extracts sentences, and uses FinBERT and regex rules to classify guidance types and sentiment.
+```powershell
+python run_extraction.py
+```
+*(Tip: Use `python run_extraction.py --limit 2` to test the pipeline on a subset of transcripts)*
