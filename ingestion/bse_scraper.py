@@ -156,7 +156,12 @@ def download_transcripts(
 
         try:
             resp = requests.get(item["url"], headers=HEADERS, timeout=60, stream=True)
+            if resp.status_code == 404 and "AttachLive" in item["url"]:
+                # Fallback to historical attachment directory
+                fallback_url = item["url"].replace("AttachLive", "AttachHis")
+                resp = requests.get(fallback_url, headers=HEADERS, timeout=60, stream=True)
             resp.raise_for_status()
+            
             with open(local_path, "wb") as f:
                 for chunk in resp.iter_content(chunk_size=8192):
                     f.write(chunk)
@@ -164,7 +169,7 @@ def download_transcripts(
             item["local_path"] = str(local_path)
             downloaded.append(item)
         except Exception as exc:
-            logger.warning(f"  Failed to download {item['url']}: {exc}")
+            logger.warning(f"  Failed to download {item['filename']}: {exc}")
             item["local_path"] = None
 
         time.sleep(0.3)
