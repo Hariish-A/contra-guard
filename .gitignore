@@ -27,8 +27,6 @@ data/transcripts/**/*.pdf
 data/tracker.db
 data/*.db
 data/*.duckdb
-data/tracker.db-shm
-data/tracker.db-wal
 
 # Keep the directory structure in git
 !data/transcripts/.gitkeep
