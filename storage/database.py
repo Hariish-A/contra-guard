@@ -272,6 +272,69 @@ def get_contradictions(contradiction_type: str = None):
         ).fetchall()
 
 
+def get_all_executives():
+    """Return all executives with their company name."""
+    with get_connection() as conn:
+        return conn.execute(
+            """
+            SELECT e.id, e.name, e.role, e.company_id, c.name AS company_name
+            FROM executives e
+            JOIN companies c ON c.id = e.company_id
+            ORDER BY e.id
+            """
+        ).fetchall()
+
+
+def get_predictions_for_executive(executive_id: int):
+    """Return all predictions for an executive, ordered by quarter."""
+    with get_connection() as conn:
+        return conn.execute(
+            "SELECT * FROM predictions WHERE executive_id=? ORDER BY quarter",
+            (executive_id,),
+        ).fetchall()
+
+
+def update_prediction_actual(
+    prediction_id: int,
+    actual_value: float,
+    verified: int = 1,
+) -> None:
+    """Fill in the actual outcome for a previously stored prediction."""
+    with get_connection() as conn:
+        conn.execute(
+            "UPDATE predictions SET actual_value=?, verified=? WHERE id=?",
+            (actual_value, verified, prediction_id),
+        )
+
+
+def get_contradictions_for_executive(executive_id: int):
+    """
+    Return all contradictions where EITHER statement belongs to the given executive.
+    Joins statements table to filter by executive_id.
+    """
+    with get_connection() as conn:
+        return conn.execute(
+            """
+            SELECT c.*
+            FROM contradictions c
+            JOIN statements sa ON sa.id = c.statement_a_id
+            WHERE sa.executive_id = ?
+            ORDER BY c.score DESC
+            """,
+            (executive_id,),
+        ).fetchall()
+
+
+def get_statement_count_for_executive(executive_id: int) -> int:
+    """Return total number of statements stored for an executive."""
+    with get_connection() as conn:
+        row = conn.execute(
+            "SELECT COUNT(*) AS cnt FROM statements WHERE executive_id=?",
+            (executive_id,),
+        ).fetchone()
+        return row["cnt"] if row else 0
+
+
 # ─────────────────────────────────────────────────────────────────────
 # Prediction helpers
 # ─────────────────────────────────────────────────────────────────────

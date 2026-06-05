@@ -17,7 +17,7 @@ DATA INGESTION → EXTRACTION → CONTRADICTION ENGINE → CREDIBILITY SCORER �
 | 1 — Data Ingestion | `ingestion/` | ✅ Week 1 |
 | 2 — Extraction | `extraction/` | ✅ Week 2 |
 | 3 — Contradiction Engine | `contradiction/` | ✅ Week 3–4 (Milestones 3 & 4 ✅) |
-| 4 — Credibility Scorer | `credibility/` | 🔜 Week 5 |
+| 4 — Credibility Scorer | `credibility/` | ✅ Week 5 |
 | 5 — Dashboard | `dashboard/` | 🔜 Week 6 |
 
 ---
@@ -127,7 +127,7 @@ Target quarters: **Q1FY23 → Q4FY24** (8 quarters per company)
 | 2 | Speaker diarization + statement extractor + classifier | ✅ |
 | 3 | FAISS index + NLI contradiction scorer | ✅ |
 | 4 | Soft contradiction detector + hedge escalation + omission detection | ✅ |
-| 5 | Credibility scorer tracking 3 executives across 2 years | 🔜 |
+| 5 | Credibility scorer: prediction extraction + penalty model + accuracy score | ✅ |
 | 6 | Streamlit dashboard: timeline + scorecard + search + PDF export | 🔜 |
 
 ---
@@ -188,6 +188,57 @@ Search an executive's statements semantically using their dynamically constructe
 python run_contradiction.py --exec-id <executive_id> --query "<query_text>"
 ```
 *(Example: `python run_contradiction.py --exec-id 1 --query "growth"`)*
+
+---
+
+### Week 5: Credibility Scorer
+This step extracts numeric predictions from guidance statements, stores them in the `predictions` table, and computes a composite credibility score per executive.
+
+#### 1. Extract Predictions from Guidance Statements
+Scans all `QUANTITATIVE_GUIDANCE` statements for numeric predictions (%, INR values, BPS) and populates the `predictions` table:
+```powershell
+python run_credibility.py --extract-predictions
+```
+*(Tip: Limit to one executive with `--exec-id <ID>` for faster testing)*
+
+#### 2. Score All Executives
+Compute and print the full credibility report across all executives:
+```powershell
+python run_credibility.py --score
+```
+
+#### 3. Score a Single Executive
+```powershell
+python run_credibility.py --score --exec-id 1
+```
+
+#### 4. List All Extracted Predictions
+Inspect what predictions were extracted and which have been verified:
+```powershell
+python run_credibility.py --list-predictions
+```
+
+#### 5. Verify a Prediction (Record Actual Outcome)
+Once an actual financial result is known, record it against the prediction:
+```powershell
+python run_credibility.py --verify --pred-id <PREDICTION_ID> --actual <ACTUAL_VALUE>
+```
+*(Example: `python run_credibility.py --verify --pred-id 3 --actual 14.5`)*
+
+#### 6. Export as JSON
+```powershell
+python run_credibility.py --score --json
+```
+
+#### How the credibility score is calculated:
+| Signal | Weight | Description |
+|---|---|---|
+| **HARD contradiction** | −20 per | Direct logical reversal detected by NLI |
+| **SOFT contradiction** | −10 per | Sentiment/hedge reversal detected |
+| **OMISSION contradiction** | −5 per | Topic dropped after 3+ quarters |
+| **Correct prediction** | +10 per | Direction of actual outcome matched prediction |
+| **Wrong prediction** | −10 per | Direction of actual outcome missed |
+| **Base score** | 100 | Starting point, clamped to [0, 100] |
 
 ---
 
