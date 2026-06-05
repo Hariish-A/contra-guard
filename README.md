@@ -18,7 +18,7 @@ DATA INGESTION → EXTRACTION → CONTRADICTION ENGINE → CREDIBILITY SCORER �
 | 2 — Extraction | `extraction/` | ✅ Week 2 |
 | 3 — Contradiction Engine | `contradiction/` | ✅ Week 3–4 (Milestones 3 & 4 ✅) |
 | 4 — Credibility Scorer | `credibility/` | ✅ Week 5 |
-| 5 — Dashboard | `dashboard/` | 🔜 Week 6 |
+| 5 — Dashboard | `dashboard/` | ✅ Week 6 |
 
 ---
 
@@ -128,7 +128,7 @@ Target quarters: **Q1FY23 → Q4FY24** (8 quarters per company)
 | 3 | FAISS index + NLI contradiction scorer | ✅ |
 | 4 | Soft contradiction detector + hedge escalation + omission detection | ✅ |
 | 5 | Credibility scorer: prediction extraction + penalty model + accuracy score | ✅ |
-| 6 | Streamlit dashboard: timeline + scorecard + search + PDF export | 🔜 |
+| 6 | Streamlit dashboard: timeline + scorecard + search + PDF export | ✅ |
 
 ---
 
@@ -269,3 +269,14 @@ python -c "import sqlite3; conn = sqlite3.connect('data/tracker.db'); print(conn
 | **HARD** | NLI contradiction prob > 0.5 | "18% growth" → "revised to 8%" |
 | **SOFT** | Topic sim + sentiment flip + hedge escalation > 0.6 | "confident margins" → "headwinds suppressing margins" |
 | **OMISSION** | Topic absent after 3+ consecutive quarters of mentions | "rural segment" discussed Q1–Q3, never mentioned in Q4 |
+
+---
+
+### Week 6: Interactive Dashboard
+This step starts the premium Streamlit interactive dashboard, allowing you to browse executive scorecards, view contradiction timelines side-by-side, perform real-time semantic search over statement embeddings via FAISS, and verify numeric predictions.
+
+#### Start the Dashboard
+```powershell
+streamlit run dashboard/app.py
+```
+After running, the dashboard will open automatically in your browser at `http://localhost:8501`.
