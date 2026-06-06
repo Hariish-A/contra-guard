@@ -317,7 +317,7 @@ with st.sidebar:
     st.markdown("""
     <div style="padding:10px 0 24px 0;border-bottom:1px solid #1e293b;margin-bottom:24px;">
         <div style="font-size:1.6rem;font-weight:800;color:#f1f5f9;line-height:1.2;">
-            📊 FCT
+            📊 ContraGuard
         </div>
         <div style="color:#3b82f6;font-size:0.75rem;font-weight:600;
                     letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;">
