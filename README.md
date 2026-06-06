@@ -191,6 +191,36 @@ python run_contradiction.py --exec-id <executive_id> --query "<query_text>"
 
 ---
 
+### Week 4: Full Contradiction Detection Pipeline
+This step runs the complete Milestone 4 pipeline — scanning every executive's statements for HARD, SOFT, and OMISSION contradictions and storing all results in the `contradictions` table.
+
+#### 1. Run the Full Pipeline (All Executives)
+Scans all executives for all three contradiction types:
+```powershell
+python run_contradiction.py --run-pipeline
+```
+
+#### 2. Run Pipeline for a Single Executive (Faster — for Testing)
+```powershell
+python run_contradiction.py --run-pipeline --filter-exec <executive_id>
+```
+*(Example: `python run_contradiction.py --run-pipeline --filter-exec 1`)*
+
+#### 3. Inspect Detected Contradictions
+Verify results directly in the database:
+```powershell
+python -c "import sqlite3; conn = sqlite3.connect('data/tracker.db'); print(conn.execute('SELECT contradiction_type, COUNT(*) FROM contradictions GROUP BY contradiction_type').fetchall())"
+```
+
+#### What gets detected:
+| Type | Signal | Example |
+|---|---|---|
+| **HARD** | NLI contradiction prob > 0.5 | "18% growth" → "revised to 8%" |
+| **SOFT** | Topic sim + sentiment flip + hedge escalation > 0.6 | "confident margins" → "headwinds suppressing margins" |
+| **OMISSION** | Topic absent after 3+ consecutive quarters of mentions | "rural segment" discussed Q1–Q3, never mentioned in Q4 |
+
+---
+
 ### Week 5: Credibility Scorer
 This step extracts numeric predictions from guidance statements, stores them in the `predictions` table, and computes a composite credibility score per executive.
 
@@ -239,36 +269,6 @@ python run_credibility.py --score --json
 | **Correct prediction** | +10 per | Direction of actual outcome matched prediction |
 | **Wrong prediction** | −10 per | Direction of actual outcome missed |
 | **Base score** | 100 | Starting point, clamped to [0, 100] |
-
----
-
-### Week 4: Full Contradiction Detection Pipeline
-This step runs the complete Milestone 4 pipeline — scanning every executive's statements for HARD, SOFT, and OMISSION contradictions and storing all results in the `contradictions` table.
-
-#### 1. Run the Full Pipeline (All Executives)
-Scans all executives for all three contradiction types:
-```powershell
-python run_contradiction.py --run-pipeline
-```
-
-#### 2. Run Pipeline for a Single Executive (Faster — for Testing)
-```powershell
-python run_contradiction.py --run-pipeline --filter-exec <executive_id>
-```
-*(Example: `python run_contradiction.py --run-pipeline --filter-exec 1`)*
-
-#### 3. Inspect Detected Contradictions
-Verify results directly in the database:
-```powershell
-python -c "import sqlite3; conn = sqlite3.connect('data/tracker.db'); print(conn.execute('SELECT contradiction_type, COUNT(*) FROM contradictions GROUP BY contradiction_type').fetchall())"
-```
-
-#### What gets detected:
-| Type | Signal | Example |
-|---|---|---|
-| **HARD** | NLI contradiction prob > 0.5 | "18% growth" → "revised to 8%" |
-| **SOFT** | Topic sim + sentiment flip + hedge escalation > 0.6 | "confident margins" → "headwinds suppressing margins" |
-| **OMISSION** | Topic absent after 3+ consecutive quarters of mentions | "rural segment" discussed Q1–Q3, never mentioned in Q4 |
 
 ---
 
