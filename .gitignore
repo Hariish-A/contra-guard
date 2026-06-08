@@ -24,7 +24,6 @@ env/
 
 # ── Data (large / sensitive) ─────────────────────────────────────────
 data/transcripts/**/*.pdf
-data/tracker.db
 data/*.db
 data/*.duckdb
 
